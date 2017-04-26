@@ -1,0 +1,275 @@
+<div class="row">
+    <div class="col-md-12" ng-controller="NetworkingRouteController">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Route
+                    <span class="dropdown">
+                        <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="NetworkingRouteDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="NetworkingRouteDropdown">
+                            <li ng-click="restartDNS()"><a>Restart DNS</a></li>
+                        </ul>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <p class="well well-sm alert-success" ng-show="restartedDNS">DNS restarted successfully</p>
+                <pre class="scrollable-pre">{{ routeTable }}</pre>
+
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label>Default Route</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="routeIP" name="routeIP" ng-model="routeIP" placeholder="172.16.42.42">
+                    </div>
+
+                    <div class="form-group">
+                        <select class="form-control" id="routeInterface" name="routeInterface" ng-model="routeInterface">
+                            <option ng-repeat="interface in routeInterfaces">{{ interface }}</option>
+                        </select>
+                    </div>
+
+                    <br/>
+                    <br/>
+
+                    <div class="form-group">
+                        <p class="well well-sm alert-success" ng-show="updatedRoute">The default route has been updated successfully</p>
+                        <button class="btn btn-default" ng-click="updateRoute()">Update Route</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6" ng-controller="NetworkingAccessPointsController">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Access Points</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Access Point Channel</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" ng-model="apConfig['selectedChannel']">
+                                <option ng-repeat="channel in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">{{ channel }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Open AP SSID</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="apConfig['openSSID']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Hide Open AP</label>
+                        <div class="col-sm-5">
+                            <input type="checkbox" class="checkbox" ng-model="apConfig['hideOpenAP']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Management AP SSID</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="apConfig['managementSSID']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Management AP Key</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control" ng-model="apConfig['managementKey']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Hide Management AP</label>
+                        <div class="col-sm-5">
+                            <input type="checkbox" class="checkbox" ng-model="apConfig['hideManAP']">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Disable Management AP</label>
+                        <div class="col-sm-5">
+                            <input type="checkbox" class="checkbox" ng-model="apConfig['disableManagementAP']">
+                        </div>
+                    </div>
+                    <div class="well well-sm alert-success" ng-show="apConfigurationSaved">The Wireless AP Configuration has been saved. The radios will now restart. If connected over Wireless, you may need to reconnect.</div>
+                    <div class="well well-sm alert-danger" ng-show="apConfigurationError">{{ apConfigurationError }}</div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button class="btn btn-default" ng-click="saveAPConfiguration()">Update Access Point</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6" ng-controller="NetworkingClientModeController">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">WiFi Client Mode</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" ng-show="connected">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Interface</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="connectedInterface" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">SSID</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="connectedSSID" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">IP</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="connectedIP" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-5">
+                            <button class="btn btn-default" ng-click="checkConnection()" ng-hide="disconnecting">Refresh</button> 
+                            <button class="btn btn-default" ng-click="disconnect()" ng-hide="disconnecting">Disconnect</button> 
+                            <img ng-show="disconnecting" src="img/throbber.gif">
+                        </div>
+                    </div>
+                </form>
+                <div ng-hide="connected">
+                    <form class="form-inline">
+                        <label class="col-sm-3 control-label">Interface</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-model="selectedInterface">
+                                <option ng-repeat="interface in interfaces">{{ interface }}</option>
+                            </select>
+                            <button ng-hide="scanning" class="btn btn-default" ng-click="scanForNetworks()">Scan</button>
+                            <img ng-show="scanning" src="img/throbber.gif">
+                            <small ng-show="selectedInterface === 'wlan1' || selectedInterface === 'wlan1mon'"> Note: Choosing wlan1 will interfere with PineAP.</small>
+                        </div>
+                    </form>
+                    <br><br>
+                    <div class="well well-sm alert-success col-sm-6" ng-show="noNetworkFound">No networks found.</div>
+                    <form class="form-inline" ng-show="accessPoints.length">
+                        <label class="col-sm-3 control-label">Access Point</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-options="ap.ssid for ap in accessPoints track by ap.mac" ng-model="selectedAP"></select>
+                            <button class="btn btn-default" ng-click="connectToAP()" ng-hide="connecting">Connect</button>
+                            <img ng-show="connecting" src="img/throbber.gif">
+                        </div>
+                    </form>
+                    <br><br>
+                    <form class="form-inline" ng-show="accessPoints.length && (selectedAP['security'] !== 'Open')">
+                        <label class="col-sm-3 control-label">Password</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="password" ng-model="key">
+                        </div>
+                    </form>
+
+                    <div class="col-sm-6" ng-show="accessPoints.length">
+                        <b>BSSID:</b> {{ selectedAP['mac'] }}<br>
+                        <b>SSID:</b> {{ selectedAP['ssid'] }}<br>
+                        <b>Channel:</b> {{ selectedAP['channel'] }}<br>
+                        <b>Signal Strength:</b> {{ selectedAP['signal'] }}<br>
+                        <b>Quality:</b> {{ selectedAP['quality'] }}<br>
+                        <b>Security:</b> {{ selectedAP['security'] }}<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6" ng-controller="NetworkingMACAddressesController">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">MAC Addresses
+                    <span class="dropdown">
+                        <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="NetworkingAccessPointsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="NetworkingAccessPointsDropdown">
+                            <li ng-click="resetMac()"><a>Restore Default MAC Address </a></li>
+                        </ul>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div ng-show="resettingMac">
+                    <img class="center-block" src="img/throbber.gif">
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Interface</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" ng-model="selectedInterface">
+                                <option ng-repeat="(interface, mac) in interfaces">{{ interface }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Current MAC</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="interfaces[selectedInterface]" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">New MAC</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="newMac">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button class="btn btn-default" ng-click="setMac()">Set New MAC</button>
+                            <button class="btn btn-default" ng-click="setRandomMac()">Set Random MAC</button>
+                        </div>
+                    </div>
+                    <small>Note: Changing MAC addresses may disconnect devices from the WiFi Pineapple.</small>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6" ng-controller="NetworkingAdvancedController">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Advanced
+                    <span class="dropdown">
+                        <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="NetworkingAdvancedDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <small><span class="caret"></span></small>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="NetworkingAdvancedDropdown">
+                            <li ng-click="resetWirelessConfig()"><a>Reset WiFi Config to Defaults</a></li>
+                        </ul>
+                    </span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="well well-sm alert-success" ng-show="wirelessReset">The Wireless Configuration has been reset. The Network will now restart.</div>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="hostname" class="col-sm-2 control-label">Hostname</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="hostname" ng-model="data['hostname']">
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 well well-sm alert-success" ng-show="hostnameUpdated">Hostname updated successfully.</div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-default" ng-click="setHostname()">Update Hostname</button>
+                        </div>
+                    </div>
+                </form>
+                <pre class="scrollable-pre">{{ data['ifconfig'] }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
