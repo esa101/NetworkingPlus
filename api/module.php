@@ -353,12 +353,12 @@ class Networking extends SystemModule
                         $encryption = "psk+tkip+ccmp";
                         break;
 
-                    case 'WPA2':
+                    case 'WPA2 TKIP':
                     case 'WPA2 PSK (TKIP)':
                         $encryption = "psk2+tkip";
                         break;
 
-                    case 'WPA2 (CCMP)':
+                    case 'WPA2':
                     case 'WPA2 PSK (CCMP)':
                         $encryption = "psk2+ccmp";
                         break;
@@ -384,7 +384,7 @@ class Networking extends SystemModule
                         break;
 
                     default:
-                        $encryption = "WPA2";
+                        $encryption = "none";
                 }
         $this->uciSet('wireless.@wifi-iface[0].encryption', $encryption);
         $this->uciSet('wireless.@wifi-iface[0].key', $config->ClientKey);
