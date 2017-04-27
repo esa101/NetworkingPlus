@@ -59,7 +59,10 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
         hideOpenAP: false,
         managementSSID: "",
         managementKey: "",
+        ClientKey: "",
+        clientAPType: "",
         disableManagementAP: false,
+        disableClientAP: false,
     };
 
     $scope.saveAPConfiguration = (function() {
