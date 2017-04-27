@@ -331,7 +331,65 @@ class Networking extends SystemModule
         }
         $this->uciSet('wireless.radio0.channel', $config->selectedChannel);
         $this->uciSet('wireless.@wifi-iface[0].ssid', $config->openSSID);
+
+        $security = $config->clientAPType;
+                switch ($security) {
+                    case 'Open':
+                        $encryption = "none";
+                        break;
+
+                    case 'WPA':
+                    case 'WPA PSK (TKIP)':
+                        $encryption = "psk+tkip";
+                        break;
+
+                    case 'WPA (CCMP)':
+                    case 'WPA PSK (CCMP)':
+                        $encryption = "psk+ccmp";
+                        break;
+
+                    case 'WPA (TKIP, CCMP)':
+                    case 'WPA PSK (TKIP, CCMP)':
+                        $encryption = "psk+tkip+ccmp";
+                        break;
+
+                    case 'WPA2':
+                    case 'WPA2 PSK (TKIP)':
+                        $encryption = "psk2+tkip";
+                        break;
+
+                    case 'WPA2 (CCMP)':
+                    case 'WPA2 PSK (CCMP)':
+                        $encryption = "psk2+ccmp";
+                        break;
+
+                    case 'WPA2 (TKIP, CCMP)':
+                    case 'WPA2 PSK (TKIP, CCMP)':
+                        $encryption = "psk2+ccmp+tkip";
+                        break;
+
+                    case 'mixed WPA/WPA2 (TKIP)':
+                    case 'mixed WPA/WPA2 PSK (TKIP)':
+                        $encryption = "psk-mixed+tkip";
+                        break;
+
+                    case 'mixed WPA/WPA2 (CCMP)':
+                    case 'mixed WPA/WPA2 PSK (CCMP)':
+                        $encryption = "psk-mixed+ccmp";
+                        break;
+
+                    case 'mixed WPA/WPA2 (TKIP, CCMP)':
+                    case 'mixed WPA/WPA2 PSK (TKIP, CCMP)':
+                        $encryption = "psk-mixed+ccmp+tkip";
+                        break;
+
+                    default:
+                        $encryption = "WPA2";
+                }
+        $this->uciSet('wireless.@wifi-iface[0].encryption', $encryption);
+        $this->uciSet('wireless.@wifi-iface[0].key', $config->ClientKey);
         $this->uciSet('wireless.@wifi-iface[0].hidden', $config->hideOpenAP);
+        $this->uciSet('wireless.@wifi-iface[0].disabled', $config->disableClientAP);
         $this->uciSet('wireless.@wifi-iface[1].ssid', $config->managementSSID);
         $this->uciSet('wireless.@wifi-iface[1].key', $config->managementKey);
         $this->uciSet('wireless.@wifi-iface[1].disabled', $config->disableManagementAP);
