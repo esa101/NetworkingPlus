@@ -62,17 +62,40 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Open AP SSID</label>
+                        <label class="col-sm-3 control-label">Client AP SSID</label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control" ng-model="apConfig['openSSID']">
                         </div>
                     </div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Client AP Encryption</label>
+                            <div class="col-sm-5">
+                                <select class="form-control" ng-model="apConfig['clientAPType']">
+                                    <option ng-repeat="APEncrypt in ['Open','WEP','WPA','WPA2']">{{ APEncrypt }}</option>
+                                </select>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Client AP Key</label>
+                                <div class="col-sm-5">
+                                    <input type="password" class="form-control" ng-model="apConfig['ClientKey']">
+                                </div>
+                            </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Hide Open AP</label>
+                        <label class="col-sm-3 control-label">Hide Client AP</label>
                         <div class="col-sm-5">
                             <input type="checkbox" class="checkbox" ng-model="apConfig['hideOpenAP']">
                         </div>
                     </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Disable Client AP</label>
+                            <div class="col-sm-5">
+                                <input type="checkbox" class="checkbox" ng-model="apConfig['disableClientAP']">
+                            </div>
+                        </div>
+                    <br>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Management AP SSID</label>
                         <div class="col-sm-5">
