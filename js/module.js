@@ -60,7 +60,7 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
         managementSSID: "",
         managementKey: "",
         ClientKey: "",
-        clientAPType: "",
+        clientAPType: "Open",
         disableManagementAP: false,
         disableClientAP: false,
     };
