@@ -333,6 +333,12 @@ class NetworkingPlus extends SystemModule
             $this->error = "Error: WPA2 Passwords must be at least 8 characters long.";
             return;
         }
+
+        if (strlen($config->ClientKey) < 8 and $config->clientAPType != "Open" and $config->disableClientAP == 0) {
+            $this->error = "Error: Client AP WPA/WPA2 Passwords must be at least 8 characters long.";
+            return;
+        }
+
         $this->uciSet('wireless.radio0.channel', $config->selectedChannel);
         $this->uciSet('wireless.@wifi-iface[0].ssid', $config->openSSID);
 
