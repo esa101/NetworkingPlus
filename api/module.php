@@ -1,6 +1,6 @@
 <?php namespace pineapple;
 
-class Networking extends SystemModule
+class NetworkingPlus extends SystemModule
 {
     public function route()
     {
@@ -39,6 +39,10 @@ class Networking extends SystemModule
 
             case 'getAPConfig':
                 $this->getAPConfig();
+                break;
+
+            case 'getAPConfig1':
+                $this->getAPConfig1();
                 break;
 
             case 'getMacData':
@@ -400,14 +404,44 @@ class Networking extends SystemModule
 
     private function getAPConfig()
     {
+        $enc = $this->uciGet("wireless.@wifi-iface[0].encryption");
+        if($enc == "none")
+        {
+            $enc = "Open";
+        } elseif ($enc == "psk+tkip")
+        {
+            $enc = "WPA";
+        } elseif ($enc == "psk2+ccmp")
+        {
+            $enc = "WPA2";
+        }
+
         $this->response = array(
             "selectedChannel" => $this->uciGet("wireless.radio0.channel"),
             "openSSID" => $this->uciGet("wireless.@wifi-iface[0].ssid"),
             "hideOpenAP" => $this->uciGet("wireless.@wifi-iface[0].hidden"),
             "managementSSID" => $this->uciGet("wireless.@wifi-iface[1].ssid"),
             "managementKey" => $this->uciGet("wireless.@wifi-iface[1].key"),
-            "disableManagementAP" => $this->uciGet("wireless.@wifi-iface[1].disabled")
+            "disableManagementAP" => $this->uciGet("wireless.@wifi-iface[1].disabled"),
+            "clientAPType" => $enc,
+            "ClientKey" => $this->uciGet("wireless.@wifi-iface[0].key"),
+            "hideOpenAP" => $this->uciGet("wireless.@wifi-iface[0].hidden"),
+            "hideManAP" => $this->uciGet("wireless.@wifi-iface[1].hidden"),
+            "disableManagementAP" => $this->uciGet("wireless.@wifi-iface[1].disabled"),
+            "disableClientAP" => $this->uciGet("wireless.@wifi-iface[0].disabled")
         );
+    }
+
+    private function getAPConfig1()
+    {
+       $enc = $this->uciGet("wireless.@wifi-iface[0].encryption");
+       $this->response = array("success" => true,    // define $this->response. We can use an array to set multiple responses.
+                                "clientAPType" => "Open",
+                                "content" => "This is the HTML template for your new module! The example shows you the basics of using HTML, AngularJS and PHP to seamlessly pass information to and from Javascript and PHP and output it to HTML.");
+       if($enc == "none")
+       {exec("echo $enc > /tmp/remolog");}
+       else
+       {exec("echo 'cant find' > /tmp/remolog");}
     }
 
     private function getMacData()
