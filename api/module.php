@@ -348,12 +348,12 @@ class NetworkingPlus extends SystemModule
                         $encryption = "none";
                         break;
 
-                    case 'WPA':
+                    case 'WPA TKIP':
                     case 'WPA PSK (TKIP)':
                         $encryption = "psk+tkip";
                         break;
 
-                    case 'WPA (CCMP)':
+                    case 'WPA CCMP':
                     case 'WPA PSK (CCMP)':
                         $encryption = "psk+ccmp";
                         break;
@@ -412,22 +412,19 @@ class NetworkingPlus extends SystemModule
     {
         $enc = $this->uciGet("wireless.@wifi-iface[0].encryption");
         if($enc == "none")
-        {
-            $enc = "Open";
-        } elseif ($enc == "psk+tkip")
-        {
-            $enc = "WPA";
-        } elseif ($enc == "psk2+ccmp")
-        {
-            $enc = "WPA2 CCMP";
-        } elseif ($enc == "psk2+tkip")
-        {
-            $enc = "WPA2 TKIP";
-        }
+        {$enc = "Open";}
+        elseif ($enc == "psk+tkip")
+        {$enc = "WPA TKIP";}
+        elseif ($enc == "psk+ccmp")
+        {$enc = "WPA CCMP";}
+        elseif ($enc == "psk+ccmp+tkip")
+        {$enc = "WPA (TKIP, CCMP)";}
+        elseif ($enc == "psk2+ccmp")
+        {$enc = "WPA2 CCMP";}
+        elseif ($enc == "psk2+tkip")
+        {$enc = "WPA2 TKIP";}
         elseif ($enc == "psk2+ccmp+tkip")
-        {
-            $enc = "WPA2 (TKIP, CCMP)";
-        }
+        {$enc = "WPA2 (TKIP, CCMP)";}
 
         $this->response = array(
             "selectedChannel" => $this->uciGet("wireless.radio0.channel"),
