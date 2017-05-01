@@ -1,7 +1,7 @@
 # NetworkingPlus
 Nano/Tetra networking module with more option for client AP creation. 
 
-Installation: Just place the files in /pineapple/modules/NetworkingPlus
+Just replace the files with those on the /pineapple/modules/Networking
 
 Do a refresh of pineapple gui management console.
 Enable -> Allow Associations

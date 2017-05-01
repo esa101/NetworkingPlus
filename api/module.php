@@ -368,7 +368,7 @@ class NetworkingPlus extends SystemModule
                         $encryption = "psk2+tkip";
                         break;
 
-                    case 'WPA2':
+                    case 'WPA2 CCMP':
                     case 'WPA2 PSK (CCMP)':
                         $encryption = "psk2+ccmp";
                         break;
@@ -419,7 +419,14 @@ class NetworkingPlus extends SystemModule
             $enc = "WPA";
         } elseif ($enc == "psk2+ccmp")
         {
-            $enc = "WPA2";
+            $enc = "WPA2 CCMP";
+        } elseif ($enc == "psk2+tkip")
+        {
+            $enc = "WPA2 TKIP";
+        }
+        elseif ($enc == "psk2+ccmp+tkip")
+        {
+            $enc = "WPA2 (TKIP, CCMP)";
         }
 
         $this->response = array(

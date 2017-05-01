@@ -98,17 +98,7 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
             }
         });
     });
-    $scope.getAPConfiguration1 = (function() {
-        $api.request({
-            module: "NetworkingPlus",
-            action: "getAPConfig1"
-        }, function(response) {
-            alert(response.clientAPType);
-            $scope.apConfig['clientAPType'] = response.clientAPType;
-        });
-    });
     $scope.getAPConfiguration();
-    //$scope.getAPConfiguration1();
 }]);
 
 registerController('NetworkingClientModeController', ['$api', '$scope', '$timeout', function($api, $scope, $timeout) {
