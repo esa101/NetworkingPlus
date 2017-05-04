@@ -7,7 +7,7 @@ registerController('NetworkingRouteController', ['$api', '$scope', '$timeout', f
 
     $scope.getRoute = (function(){
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'getRoutingTable'
         }, function(response){
             $scope.routeTable = response.routeTable;
@@ -17,7 +17,7 @@ registerController('NetworkingRouteController', ['$api', '$scope', '$timeout', f
 
     $scope.restartDNS = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'restartDNS'
         }, function(response) {
             if (response.success === true) {
@@ -31,7 +31,7 @@ registerController('NetworkingRouteController', ['$api', '$scope', '$timeout', f
 
     $scope.updateRoute = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'updateRoute',
             routeIP: $scope.routeIP,
             routeInterface: $scope.routeInterface
@@ -61,13 +61,14 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
         managementKey: "",
         ClientKey: "",
         clientAPType: "Open",
+        ClientLimit: "2",
         disableManagementAP: false,
         disableClientAP: false,
     };
 
     $scope.saveAPConfiguration = (function() {
         $api.request({
-            module: "Networking",
+            module: "NetworkingPlus",
             action: "saveAPConfig",
             apConfig: $scope.apConfig
         }, function(response) {
@@ -82,12 +83,12 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
                     $scope.apConfigurationError = "";
                 }, 3000);
             }
-        })
+        });
     });
 
     $scope.getAPConfiguration = (function() {
         $api.request({
-            module: "Networking",
+            module: "NetworkingPlus",
             action: "getAPConfig"
         }, function(response) {
             if (response.error === undefined) {
@@ -96,9 +97,8 @@ registerController('NetworkingAccessPointsController', ['$api', '$scope', '$time
                     $scope.apConfig['selectedChannel'] = "1";
                 }
             }
-        })
+        });
     });
-
     $scope.getAPConfiguration();
 }]);
 
@@ -115,7 +115,7 @@ registerController('NetworkingClientModeController', ['$api', '$scope', '$timeou
 
     $scope.getInterfaces = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'getClientInterfaces'
         }, function(response) {
             if (response.error === undefined) {
@@ -128,7 +128,7 @@ registerController('NetworkingClientModeController', ['$api', '$scope', '$timeou
     $scope.scanForNetworks = (function() {
         $scope.scanning = true;
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'scanForNetworks',
             interface: $scope.selectedInterface
         }, function(response) {
@@ -146,7 +146,7 @@ registerController('NetworkingClientModeController', ['$api', '$scope', '$timeou
     $scope.connectToAP = (function() {
         $scope.connecting = true;
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'connectToAP',
             interface: $scope.selectedInterface,
             ap: $scope.selectedAP,
@@ -162,7 +162,7 @@ registerController('NetworkingClientModeController', ['$api', '$scope', '$timeou
 
     $scope.checkConnection = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'checkConnection',
         }, function(response) {
             if (response.error === undefined) {
@@ -182,7 +182,7 @@ registerController('NetworkingClientModeController', ['$api', '$scope', '$timeou
     $scope.disconnect = (function() {
         $scope.disconnecting = true;
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'disconnect',
             interface: $scope.connectedInterface
         }, function(response) {
@@ -209,7 +209,7 @@ registerController('NetworkingMACAddressesController', ['$api', '$scope', '$inte
 
     $scope.getMacData = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'getMacData'
         }, function(response) {
             if (response.error === undefined) {
@@ -220,7 +220,7 @@ registerController('NetworkingMACAddressesController', ['$api', '$scope', '$inte
 
     $scope.setMac = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'setMac',
             interface: $scope.selectedInterface,
             mac: $scope.newMac,
@@ -234,7 +234,7 @@ registerController('NetworkingMACAddressesController', ['$api', '$scope', '$inte
 
     $scope.setRandomMac = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'setRandomMac',
             interface: $scope.selectedInterface
         }, function(response) {
@@ -247,7 +247,7 @@ registerController('NetworkingMACAddressesController', ['$api', '$scope', '$inte
 
     $scope.resetMac = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'resetMac',
             interface: $scope.selectedInterface
         }, function(response) {
@@ -275,7 +275,7 @@ registerController('NetworkingAdvancedController', ['$api', '$scope', '$timeout'
 
     $scope.reloadData = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'getAdvancedData'
         }, function(response) {
             if (response.error === undefined) {
@@ -286,7 +286,7 @@ registerController('NetworkingAdvancedController', ['$api', '$scope', '$timeout'
 
     $scope.setHostname = (function() {
         $api.request({
-            module: "Networking",
+            module: "NetworkingPlus",
             action: "setHostname",
             hostname: $scope.data['hostname']
         }, function(response) {
@@ -301,7 +301,7 @@ registerController('NetworkingAdvancedController', ['$api', '$scope', '$timeout'
 
     $scope.resetWirelessConfig = (function() {
         $api.request({
-            module: 'Networking',
+            module: 'NetworkingPlus',
             action: 'resetWirelessConfig'
         }, function(response) {
             if (response.error === undefined) {

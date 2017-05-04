@@ -1,7 +1,5 @@
 {
-    "title": "NetworkingPlus",
-    "version": "1.1",
-    "author": "esa",
-    "system": true,
-    "index": 10
+    "title": "Networking",
+    "version": "1.4",
+    "author": "esa"
 }

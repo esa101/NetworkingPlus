@@ -72,7 +72,7 @@
                             <label class="col-sm-3 control-label">Client AP Encryption</label>
                             <div class="col-sm-5">
                                 <select class="form-control" ng-model="apConfig['clientAPType']">
-                                    <option ng-repeat="APEncrypt in ['Open','WEP','WPA','WPA2']">{{ APEncrypt }}</option>
+                                    <option ng-repeat="APEncrypt in ['Open','WPA TKIP','WPA CCMP','WPA (TKIP, CCMP)','WPA2 TKIP', 'WPA2 CCMP','WPA2 (TKIP, CCMP)']">{{ APEncrypt }}</option>
                                 </select>
                             </div>
                         </div>
@@ -82,6 +82,12 @@
                                     <input type="password" class="form-control" ng-model="apConfig['ClientKey']">
                                 </div>
                             </div>
+                        <div class="form-group" name="inputForm">
+                            <label class="col-sm-3 control-label">No. client(s) supported</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="input" class="form-control" ng-model="apConfig['ClientLimit']" min="0" max="99" required>
+                            </div>
+                        </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Hide Client AP</label>
                         <div class="col-sm-5">
