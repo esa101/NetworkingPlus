@@ -1,5 +1,5 @@
 # NetworkingPlus
-Nano/Tetra networking module with more option for client AP creation. 
+Nano networking module with more option for client AP creation. 
 
 Just replace the files with those on the /pineapple/modules/Networking
 
