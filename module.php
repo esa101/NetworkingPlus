@@ -264,10 +264,10 @@ class NetworkingPlus extends SystemModule
 				$encryption = "";
 		}
 
-        if (empty(exec("grep wwan /etc/config/firewall"))) {
-            $this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wan');
-        } else {
+        if (empty(exec("grep NANO /proc/cpuinfo"))) {
             $this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wwan');
+        } else {
+            $this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wan');
         }
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].mode", 'sta');
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].ssid", $this->request->ap->ssid);
