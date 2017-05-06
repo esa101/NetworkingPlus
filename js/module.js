@@ -53,7 +53,9 @@ registerController('NetworkingRouteController', ['$api', '$scope', '$timeout', f
 registerController('NetworkingAccessPointsController', ['$api', '$scope', '$timeout', function($api, $scope, $timeout) {
     $scope.apConfigurationSaved = false;
     $scope.apConfigurationError = "";
+    $scope.apAvailableChannels = [];
     $scope.apConfig = {
+        availableChannels: [],
         selectedChannel: "1",
         openSSID: "",
         hideOpenAP: false,

@@ -57,7 +57,7 @@
                         <label class="col-sm-3 control-label">Access Point Channel</label>
                         <div class="col-sm-5">
                             <select class="form-control" ng-model="apConfig['selectedChannel']">
-                                <option ng-repeat="channel in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">{{ channel }}</option>
+                                <option ng-repeat="channel in apConfig['availableChannels']">{{ channel }}</option>
                             </select>
                         </div>
                     </div>

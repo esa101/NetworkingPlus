@@ -147,11 +147,12 @@ class NetworkingPlus extends SystemModule
 
 		$uciID = $this->getUciID(substr($interface, 1, -1));
 		$radio = $this->getRadioID(substr($interface, 1, -1));
-		if ($this->uciGet("wireless.@wifi-iface[{$uciID}].network") === 'wan') {
+		if ($this->uciGet("wireless.@wifi-iface[{$uciID}].network") === 'wan' || $this->uciGet("wireless.@wifi-iface[{$uciID}].network") === 'wwan') {
 			$this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'lan');
 			exec("wifi up $radio");
 			sleep(2);
 		}
+
 
 		exec("iwinfo {$interface} scan", $apScan);
 
@@ -172,7 +173,12 @@ class NetworkingPlus extends SystemModule
 				continue;
 			}
 
-			$accessPoint['channel'] = intval(substr(trim($apData[2]), -2));
+            if ($this->uciGet("wireless.@wifi-iface[{$uciID}].network") === 'wan'){
+                $accessPoint['channel'] = intval(substr(trim($apData[2]), -2));
+            } else {
+                $accessPoint['channel'] = intval(substr(trim($apData[2]), 23));
+            }
+
 
 			$signalString = explode("  ", trim($apData[3]));
 			$accessPoint['signal'] = substr($signalString[0], 8);
@@ -258,7 +264,11 @@ class NetworkingPlus extends SystemModule
 				$encryption = "";
 		}
 
-		$this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wan');
+        if (empty(exec("grep wan /etc/config/firewall"))) {
+            $this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wwan');
+        } else {
+            $this->uciSet("wireless.@wifi-iface[{$uciID}].network", 'wan');
+        }        
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].mode", 'sta');
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].ssid", $this->request->ap->ssid);
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].encryption", $encryption);
@@ -352,6 +362,10 @@ class NetworkingPlus extends SystemModule
 		}
 
 		$this->uciSet('wireless.radio0.channel', $config->selectedChannel);
+        if ($config->selectedChannel > 14) {
+            $this->uciSet('wireless.radio0.hwmode', '11n');
+        }
+
 		$this->uciSet('wireless.@wifi-iface[0].ssid', $config->openSSID);
 
 		$security = $config->clientAPType;
@@ -439,8 +453,12 @@ class NetworkingPlus extends SystemModule
 		elseif ($enc == "psk2+ccmp+tkip")
 		{$enc = "WPA2 (TKIP, CCMP)";}
 
+        exec("iwinfo phy0 freqlist", $output);
+        preg_match_all("/\(Channel (\d+)\)$/m", implode("\n", $output), $channelList);
+
 		$this->response = array(
 			"selectedChannel" => $this->uciGet("wireless.radio0.channel"),
+			"availableChannels" => $channelList[1],
 			"openSSID" => $this->uciGet("wireless.@wifi-iface[0].ssid"),
 			"hideOpenAP" => $this->uciGet("wireless.@wifi-iface[0].hidden"),
 			"managementSSID" => $this->uciGet("wireless.@wifi-iface[1].ssid"),
