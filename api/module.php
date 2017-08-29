@@ -208,12 +208,27 @@ class NetworkingPlus extends SystemModule
 
 		exec('[ ! -z "$(wifi detect)" ] && wifi detect > /etc/config/wireless');
 
+        $key = $this->request->key;
+
 		$uciID = $this->getUciID($interface);
 		$security = $this->request->ap->security;
 		switch ($security) {
 			case 'Open':
 				$encryption = "none";
 				break;
+
+			case 'WEP Open/Shared (WEP-40, WEP-104)':
+                $encryption = "wep";
+
+                $key_hex = '';
+
+                for($i=0; $i<strlen($key); $i++){
+                    $key_hex .= dechex(ord($key[$i]));
+                }
+
+                $key = $key_hex;
+                break;
+
 
 			case 'WPA (TKIP)':
 			case 'WPA PSK (TKIP)':
@@ -272,7 +287,7 @@ class NetworkingPlus extends SystemModule
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].mode", 'sta');
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].ssid", $this->request->ap->ssid);
 		$this->uciSet("wireless.@wifi-iface[{$uciID}].encryption", $encryption);
-		$this->uciSet("wireless.@wifi-iface[{$uciID}].key", $this->request->key);
+		$this->uciSet("wireless.@wifi-iface[{$uciID}].key", $key);
 
 		$radioID = $this->getRadioID($interface);
 		if ($radioID === false) {
